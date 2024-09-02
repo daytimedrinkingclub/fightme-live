@@ -1,14 +1,102 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import Anthropic from "@anthropic-ai/sdk";
+import Anthropic from '@anthropic-ai/sdk';
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const openAIClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || '', // Provide a fallback empty string or handle missing key
 });
 
-const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
+const anthropicClient = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || '', // Provide a fallback empty string or handle missing key
 });
+
+interface GitHubProfile {
+  name: string;
+  bio: string;
+  company: string;
+  location: string;
+  followers: number;
+  following: number;
+  public_repos: number;
+}
+
+interface GitHubRepo {
+  name: string;
+  description: string;
+  language: string;
+  stargazers_count: number;
+  open_issues_count: number;
+  license: any;
+  fork: boolean;
+}
+
+async function getUserDetails(username: string) {
+  let profileResponse: GitHubProfile | null = null;
+  let readmeContent: string = '';
+  let repoResponse: GitHubRepo[] = [];
+
+  try {
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    profileResponse = await response.json();
+
+    if (!response.ok || !profileResponse) {
+      throw new Error('Profile not found');
+    }
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    throw new Error('Could not fetch profile');
+  }
+
+  console.log('Profile Data:', profileResponse);
+
+  try {
+    const readmeResponse = await fetch(`https://raw.githubusercontent.com/${username}/${username}/master/README.md`);
+    if (readmeResponse.ok) {
+      readmeContent = await readmeResponse.text();
+    } else {
+      readmeContent = 'No README found'; // Handle missing README
+    }
+  } catch (error) {
+    console.error('Error fetching README:', error);
+    readmeContent = 'Could not fetch README'; // Handle fetch error
+  }
+
+  try {
+    const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated`);
+    repoResponse = await response.json();
+
+    if (!response.ok || !repoResponse) {
+      throw new Error('Repositories not found');
+    }
+  } catch (error) {
+    console.error('Error fetching repositories:', error);
+    throw new Error('Could not fetch repositories');
+  }
+
+  console.log('Repository Data:', repoResponse);
+
+  return {
+    name: profileResponse.name,
+    bio: profileResponse.bio,
+    company: profileResponse.company,
+    location: profileResponse.location,
+    followers: profileResponse.followers,
+    following: profileResponse.following,
+    public_repos: profileResponse.public_repos,
+    profile_readme: readmeContent,
+    last_15_repositories: repoResponse
+      .slice(0, 15)
+      .map((repo: GitHubRepo) => ({
+        name: repo.name,
+        description: repo.description,
+        language: repo.language,
+        stargazers_count: repo.stargazers_count,
+        open_issues_count: repo.open_issues_count,
+        license: repo.license,
+        fork: repo.fork,
+      })),
+  };
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -18,39 +106,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Username is required' }, { status: 400 });
   }
 
-  const readmeUrl = `https://raw.githubusercontent.com/${username}/${username}/master/README.md`;
-  let readmeContent;
+  let userDetails;
   try {
-    const readmeResponse = await fetch(readmeUrl);
-    if (!readmeResponse.ok) {
-      throw new Error('README not found');
-    }
-    readmeContent = await readmeResponse.text();
-  } catch (error) {
-    console.error('Error fetching README:', error);
-    return NextResponse.json({ error: 'Could not fetch README' }, { status: 404 });
+    userDetails = await getUserDetails(username);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 404 });
   }
 
-  console.log('README Content:', readmeContent);
+  const prompt = `Give a short and harsh roasting for the following GitHub profile: ${username}. Here are the details: "${JSON.stringify(userDetails)}"`;
 
-  const prompt = `Give a short and harsh roasting for the following GitHub profile: ${username}. Be sure to include specific roasts based on their README content: "${readmeContent}". `;
-
-  let roast;
+  let roast: string = '';
   try {
-    const completion = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      stream: false,
+    const completion = await anthropicClient.messages.create({
+      model: 'claude-3-5-sonnet-20240620',
+      max_tokens: 2000,
       messages: [
         {
-          role: 'system',
-          content:
-            'You roast people’s GitHub profiles based on their bio, name, README, and repos as harshly and as spicy as possible, and keep it short.',
+          role: 'user',
+          content: prompt,
         },
-        { role: 'user', content: prompt },
       ],
     });
 
-    roast = completion.choices[0].message.content;
+    // Explicitly type the content array
+    const contentArray = completion.content as { type: string; text: string }[];
+
+    roast = contentArray[0].text || 'Could not generate roast.';
   } catch (error) {
     console.error('Error generating roast:', error);
     return NextResponse.json({ error: 'Could not generate roast' }, { status: 500 });
