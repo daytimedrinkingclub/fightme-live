@@ -10,7 +10,7 @@ export default function HeadToHead() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-50">
       <h1 className="text-4xl font-bold text-teal-600 mb-8">GitHub Head-to-Head</h1>
-      <HeadToHeadForm setComparisonData={setComparisonData} />
+      {!comparisonData && <HeadToHeadForm setComparisonData={setComparisonData} />}
       {comparisonData && <ComparisonDisplay comparisonData={comparisonData} />}
     </main>
   );
