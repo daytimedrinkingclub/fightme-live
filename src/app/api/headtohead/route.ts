@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
 
-Who’s the top coder? Be blunt and declare the winner with a harsh reason.`;
+Who’s the top coder? Be blunt and declare the winner with a harsh reason he sarcastic.`;
 
   let battleResult: string = '';
   try {

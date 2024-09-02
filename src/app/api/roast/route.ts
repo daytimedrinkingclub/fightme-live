@@ -102,33 +102,26 @@ async function getUserDetails(username: string) {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const username1 = searchParams.get('username1');
-  const username2 = searchParams.get('username2');
+  const username = searchParams.get('username');
 
-  if (!username1 || !username2) {
-    return NextResponse.json({ error: 'Both usernames are required' }, { status: 400 });
+  if (!username) {
+    return NextResponse.json({ error: 'Username is required' }, { status: 400 });
   }
 
-  let userDetails1, userDetails2;
+  let userDetails;
   try {
-    userDetails1 = await getUserDetails(username1);
-    userDetails2 = await getUserDetails(username2);
+    userDetails = await getUserDetails(username);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
 
-  const prompt = `Battle of the GitHub profiles:
+  const prompt = `Give a short and harsh roasting for the following GitHub profile: ${username}. Here are the details: "${JSON.stringify(userDetails)}"`;
 
-**In the blue corner:** ${username1} - ${JSON.stringify(userDetails1)}
-**In the red corner:** ${username2} - ${JSON.stringify(userDetails2)}
-
-Who’s the top coder? No holding back—compare their repos, contributions, and skills. Call out weaknesses, spotlight strengths, and declare the winner. Keep it fierce and punchy in just 100 words.`;
-
-  let battleResult: string = '';
+  let roast: string = '';
   try {
     const completion = await anthropicClient.messages.create({
       model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 1000,
+      max_tokens: 2000,
       messages: [
         {
           role: 'user',
@@ -139,21 +132,13 @@ Who’s the top coder? No holding back—compare their repos, contributions, and
 
     const contentArray = completion.content as { type: string; text: string }[];
 
-    battleResult = contentArray[0].text || 'Could not generate comparison.';
+    roast = contentArray[0].text || 'Could not generate roast.';
   } catch (error) {
-    console.error('Error generating comparison:', error);
-    return NextResponse.json({ error: 'Could not generate comparison' }, { status: 500 });
+    console.error('Error generating roast:', error);
+    return NextResponse.json({ error: 'Could not generate roast' }, { status: 500 });
   }
 
-  console.log('Generated Battle Result:', battleResult);
+  console.log('Generated Roast:', roast);
 
-  return NextResponse.json({
-    username1,
-    username2,
-    battleResult,
-    name1: userDetails1.name,
-    avatar_url1: userDetails1.avatar_url,
-    name2: userDetails2.name,
-    avatar_url2: userDetails2.avatar_url,
-  });
+  return NextResponse.json({ username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
 }
