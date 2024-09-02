@@ -1,17 +1,25 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import InputForm from '../components/InputForm';
 import RoastDisplay from '../components/RoastDisplay';
 
 export default function Home() {
   const [roastData, setRoastData] = useState<{ roast: string, name: string, avatar_url: string } | null>(null);
+  const router = useRouter();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-50">
-      <h1 className="text-4xl font-bold text-teal-600 mb-8">GitHub Roaster</h1>
+    <div>
+      <h1>GitHub Roaster</h1>
       <InputForm setRoastData={setRoastData} />
       {roastData && <RoastDisplay roastData={roastData} />}
-    </main>
+      <button
+        onClick={() => router.push('/headtohead')}
+        className="mt-4 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Head-to-Head
+      </button>
+    </div>
   );
 }

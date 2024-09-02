@@ -117,12 +117,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
 
-  const prompt = `Battle of the GitHub profiles:
+  const prompt = `Compare the following GitHub profiles and declare the winner in a short and harsh manner:
 
-**In the blue corner:** ${username1} - ${JSON.stringify(userDetails1)}
-**In the red corner:** ${username2} - ${JSON.stringify(userDetails2)}
+**${username1}**: ${JSON.stringify(userDetails1)}
+**${username2}**: ${JSON.stringify(userDetails2)}
 
-Who’s the top coder? No holding back—compare their repos, contributions, and skills. Call out weaknesses, spotlight strengths, and declare the winner. Keep it fierce and punchy in just 100 words.`;
+Who’s the top coder? Be blunt and declare the winner with a harsh reason.`;
 
   let battleResult: string = '';
   try {
