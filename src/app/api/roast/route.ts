@@ -3,15 +3,16 @@ import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 
 const openAIClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '', // Provide a fallback empty string or handle missing key
+  apiKey: process.env.OPENAI_API_KEY || '',
 });
 
 const anthropicClient = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '', // Provide a fallback empty string or handle missing key
+  apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
 interface GitHubProfile {
   name: string;
+  avatar_url: string;
   bio: string;
   company: string;
   location: string;
@@ -54,11 +55,11 @@ async function getUserDetails(username: string) {
     if (readmeResponse.ok) {
       readmeContent = await readmeResponse.text();
     } else {
-      readmeContent = 'No README found'; // Handle missing README
+      readmeContent = 'No README found';
     }
   } catch (error) {
     console.error('Error fetching README:', error);
-    readmeContent = 'Could not fetch README'; // Handle fetch error
+    readmeContent = 'Could not fetch README';
   }
 
   try {
@@ -77,6 +78,7 @@ async function getUserDetails(username: string) {
 
   return {
     name: profileResponse.name,
+    avatar_url: profileResponse.avatar_url,
     bio: profileResponse.bio,
     company: profileResponse.company,
     location: profileResponse.location,
@@ -128,7 +130,6 @@ export async function GET(req: NextRequest) {
       ],
     });
 
-    // Explicitly type the content array
     const contentArray = completion.content as { type: string; text: string }[];
 
     roast = contentArray[0].text || 'Could not generate roast.';
@@ -139,5 +140,5 @@ export async function GET(req: NextRequest) {
 
   console.log('Generated Roast:', roast);
 
-  return NextResponse.json({ username, roast });
+  return NextResponse.json({ username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
 }

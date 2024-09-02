@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function InputForm({ setRoast }: { setRoast: (roast: string) => void }) {
+export default function InputForm({ setRoastData }: { setRoastData: (data: { roast: string, name: string, avatar_url: string }) => void }) {
   const [username, setUsername] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -8,7 +8,7 @@ export default function InputForm({ setRoast }: { setRoast: (roast: string) => v
     const response = await fetch(`/api/roast?username=${username}`);
     const data = await response.json();
     console.log(data); // Log the response for debugging
-    setRoast(data.roast); // Display the roast
+    setRoastData(data); // Display the roast
   };
 
   return (
