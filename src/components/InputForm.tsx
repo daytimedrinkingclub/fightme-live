@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-export default function InputForm({ setRoast }) {
+export default function InputForm({ setRoast }: { setRoast: (roast: string) => void }) {
   const [username, setUsername] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await fetch(`/api/roast?username=${username}`);
     const data = await response.json();
