@@ -6,11 +6,13 @@ import RoastDisplay from '../../components/RoastDisplay';
 
 export default function GitHubRoast() {
   const [roastData, setRoastData] = useState<{ roast: string, name: string, avatar_url: string } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
-    <div>
-      <h1>GitHub Roaster</h1>
-      <InputForm setRoastData={setRoastData} />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      <h1 className="text-3xl md:text-4xl font-bold text-teal-600 mb-8 text-center">GitHub Roaster</h1>
+      <InputForm setRoastData={setRoastData} setLoading={setLoading} />
+      {loading && <div className="loader mt-8"></div>}
       {roastData && <RoastDisplay roastData={roastData} />}
     </div>
   );
