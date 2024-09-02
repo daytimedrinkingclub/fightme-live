@@ -7,7 +7,7 @@ const openAIClient = new OpenAI({
 });
 
 const anthropicClient = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
+  apiKey: '',
 });
 
 interface GitHubProfile {
@@ -103,10 +103,13 @@ async function getUserDetails(username: string) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get('username');
+  const apiKey = searchParams.get('apiKey');
 
-  if (!username) {
-    return NextResponse.json({ error: 'Username is required' }, { status: 400 });
+  if (!username || !apiKey) {
+    return NextResponse.json({ error: 'Username and API key are required' }, { status: 400 });
   }
+
+  anthropicClient.apiKey = apiKey;
 
   let userDetails;
   try {

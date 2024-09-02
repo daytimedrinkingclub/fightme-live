@@ -1,9 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ApiKeyInput } from '../components/ApiKeyInput';
 
 export default function LandingPage() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const storedApiKey = localStorage.getItem('anthropicApiKey');
+    if (!storedApiKey) {
+      setIsModalOpen(true);
+    }
+  }, []);
+
+  const handleApiKeySubmit = (key: string) => {
+    localStorage.setItem('anthropicApiKey', key);
+    setIsModalOpen(false);
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-50">
@@ -22,6 +37,7 @@ export default function LandingPage() {
           Head-to-Head Roast
         </button>
       </div>
+      <ApiKeyInput onApiKeySubmit={handleApiKeySubmit} isOpen={isModalOpen} />
     </main>
   );
 }

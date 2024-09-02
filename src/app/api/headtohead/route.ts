@@ -7,7 +7,7 @@ const openAIClient = new OpenAI({
 });
 
 const anthropicClient = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
+  apiKey: '',
 });
 
 interface GitHubProfile {
@@ -104,10 +104,13 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const username1 = searchParams.get('username1');
   const username2 = searchParams.get('username2');
+  const apiKey = searchParams.get('apiKey');
 
-  if (!username1 || !username2) {
-    return NextResponse.json({ error: 'Both usernames are required' }, { status: 400 });
+  if (!username1 || !username2 || !apiKey) {
+    return NextResponse.json({ error: 'Both usernames and API key are required' }, { status: 400 });
   }
+
+  anthropicClient.apiKey = apiKey;
 
   let userDetails1, userDetails2;
   try {
@@ -122,7 +125,7 @@ export async function GET(req: NextRequest) {
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
 
-Who’s the top coder? Be blunt and declare the winner with a harsh reason he sarcastic.`;
+Who's the top coder? Be blunt and declare the winner with a harsh reason he sarcastic.`;
 
   let battleResult: string = '';
   try {
