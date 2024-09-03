@@ -1,8 +1,10 @@
 # GitHub Roaster
 
-This is a [Next.js](https://nextjs.org/) project that roasts GitHub profiles based on their README content using OpenAI and Anthropic APIs.
+This is a  project that roasts GitHub profiles  using OpenAI and Anthropic APIs.
 
-## Getting Started
+# Architecture
+
+![Architecture](https://github.com/daytimedrinkingclub/fightme-live/blob/main/arch?raw=true)
 
 ### Prerequisites
 
@@ -62,6 +64,3 @@ This is a [Next.js](https://nextjs.org/) project that roasts GitHub profiles bas
     yarn start
     ```
 
-### Linting
-
-To lint the project, run:
