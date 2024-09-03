@@ -36,6 +36,12 @@ export default function LandingPage() {
         >
           Head-to-Head Roast
         </button>
+        <button
+          onClick={() => router.push('/spotify')}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg w-full text-lg"
+        >
+          Spotify Roast
+        </button>
       </div>
       <ApiKeyInput onApiKeySubmit={handleApiKeySubmit} isOpen={isModalOpen} />
     </main>
