@@ -17,6 +17,14 @@ export async function GET(req: NextRequest) {
       }
     });
 
+    const followedArtistsResponse = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=5', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    console.log('Followed Artists Response:', followedArtistsResponse.json());
+
     console.log('Spotify API Response Status:', userResponse.status);
 
     if (!userResponse.ok) {
