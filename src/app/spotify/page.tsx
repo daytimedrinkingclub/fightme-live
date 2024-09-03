@@ -16,17 +16,24 @@ export default function SpotifyRoast() {
 
   const fetchUserData = async () => {
     setLoading(true);
+    setError('');
     try {
       const response = await fetch('/api/spotify/user');
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(errorData.error || 'Failed to fetch user data');
       }
+      
       const data = await response.json();
-
-      console.log(data);
+      console.log('Fetched user data:', data);
       setUserData(data);
     } catch (err) {
-      setError('Error fetching user data');
+      console.error('Error fetching user data:', err);
+      setError(err.message || 'Error fetching user data');
+      setUserData(null);
     } finally {
       setLoading(false);
     }
