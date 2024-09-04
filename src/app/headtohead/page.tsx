@@ -13,7 +13,7 @@ export default function HeadToHead() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="min-h-screen bg-gray-900 text-white overflow-hidden flex flex-col items-center justify-center">
       <CustomCursor />
       <FlameAnimation />
       <BackButton />
@@ -21,7 +21,7 @@ export default function HeadToHead() {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="container mx-auto px-4 py-8"
+        className="container mx-auto px-4 py-8 max-w-2xl"
       >
         <motion.h1
           initial={{ x: -100, opacity: 0 }}
