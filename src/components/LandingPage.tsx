@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
-import { FaGithub, FaInstagram, FaSpotify, FaTwitter, FaFacebook } from 'react-icons/fa'
+import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
 import { RiFireLine } from 'react-icons/ri'
 import { useRouter } from 'next/navigation'
 
@@ -176,31 +176,23 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="bg-gray-800 p-6 rounded-lg shadow-lg"
+            className="bg-gradient-to-r from-red-600 to-yellow-600 p-6 rounded-lg shadow-lg max-w-xl mx-auto"
           >
-            <h3 className="text-2xl font-bold mb-4">Roast of the Day</h3>
-            <p className="text-gray-400 italic">
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
+            <h3 className="text-2xl font-bold mb-3 text-center text-white">Roast of the Day</h3>
+            <p className="text-lg text-white italic text-center">
               "Your commit history reads like a horror novel"
             </p>
+            <div className="mt-3 flex justify-center">
+              <motion.div
+                animate={fireAnimation}
+                className="text-3xl text-yellow-300"
+              >
+                <RiFireLine />
+              </motion.div>
+            </div>
           </motion.div>
 
-          <div className="mt-8 flex justify-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-blue-500 p-2 rounded-full"
-            >
-              <FaTwitter size={24} />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-blue-700 p-2 rounded-full"
-            >
-              <FaFacebook size={24} />
-            </motion.button>
-          </div>
+          
         </main>
 
         <footer className="mt-16 text-center text-gray-500">
