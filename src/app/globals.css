@@ -4,6 +4,7 @@
 
 body {
   @apply bg-gray-50;
+  font-family: 'Poppins', sans-serif;
 }
 
 .loader {
@@ -22,4 +23,43 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.bg-gradient-to-br {
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.flame-text {
+  animation: flicker 2s infinite;
+  text-shadow: 0 0 5px #ff7f00, 0 0 10px #ff7f00, 0 0 15px #ff7f00, 0 0 20px #ff7f00;
+}
+
+.flame-bg {
+  background: linear-gradient(45deg, #ff4500, #ff7f00, #ffa500);
+  background-size: 200% 200%;
+  animation: flame-animation 5s ease infinite;
+}
+
+@keyframes flame-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
