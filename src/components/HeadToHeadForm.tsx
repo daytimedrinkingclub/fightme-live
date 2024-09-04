@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function HeadToHeadForm({ setComparisonData, setLoading }: { setComparisonData: (data: any) => void, setLoading: (loading: boolean) => void }) {
   const [username1, setUsername1] = useState('');
@@ -21,30 +22,38 @@ export default function HeadToHeadForm({ setComparisonData, setLoading }: { setC
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto mt-8">
+    <motion.form
+      onSubmit={handleSubmit}
+      className="w-full max-w-md mx-auto mt-8"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+    >
       <div className="flex flex-col mb-4">
         <input
           type="text"
           value={username1}
           onChange={(e) => setUsername1(e.target.value)}
           placeholder="Enter first GitHub username"
-          className="appearance-none bg-transparent border-b border-teal-500 w-full text-gray-700 py-2 px-2 leading-tight focus:outline-none mb-4"
+          className="appearance-none bg-gray-800 border border-gray-700 rounded-lg w-full text-white py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-red-500"
         />
         <input
           type="text"
           value={username2}
           onChange={(e) => setUsername2(e.target.value)}
           placeholder="Enter second GitHub username"
-          className="appearance-none bg-transparent border-b border-teal-500 w-full text-gray-700 py-2 px-2 leading-tight focus:outline-none"
+          className="appearance-none bg-gray-800 border border-gray-700 rounded-lg w-full text-white py-2 px-4 leading-tight focus:outline-none focus:border-red-500"
         />
       </div>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-      <button
+      <motion.button
         type="submit"
-        className="w-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
+        className="w-full bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         Compare
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   );
 }
