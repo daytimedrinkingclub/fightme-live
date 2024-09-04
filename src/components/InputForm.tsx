@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function InputForm({ setRoastData, setLoading }: { setRoastData: (data: { roast: string, name: string, avatar_url: string }) => void, setLoading: (loading: boolean) => void }) {
   const [username, setUsername] = useState('');
@@ -9,28 +10,35 @@ export default function InputForm({ setRoastData, setLoading }: { setRoastData: 
     const apiKey = localStorage.getItem('anthropicApiKey');
     const response = await fetch(`/api/roast?username=${username}&apiKey=${apiKey}`);
     const data = await response.json();
-    console.log(data); // Log the response for debugging
-    setRoastData(data); // Display the roast
+    setRoastData(data);
     setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto mt-8">
-      <div className="flex items-center border-b border-teal-500 py-2">
+    <motion.form
+      onSubmit={handleSubmit}
+      className="w-full max-w-md mx-auto mt-8"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+    >
+      <div className="flex items-center">
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter GitHub username"
-          className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          className="appearance-none bg-gray-800 border border-gray-700 rounded-l-lg w-full text-white py-2 px-4 leading-tight focus:outline-none focus:border-red-500"
         />
-        <button
+        <motion.button
           type="submit"
-          className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+          className="flex-shrink-0 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-r-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           Roast Me
-        </button>
+        </motion.button>
       </div>
-    </form>
+    </motion.form>
   );
 }
