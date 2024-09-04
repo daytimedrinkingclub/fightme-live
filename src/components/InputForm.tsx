@@ -7,8 +7,7 @@ export default function InputForm({ setRoastData, setLoading }: { setRoastData: 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const apiKey = localStorage.getItem('anthropicApiKey');
-    const response = await fetch(`/api/roast?username=${username}&apiKey=${apiKey}`);
+    const response = await fetch(`/api/roast?username=${username}`);
     const data = await response.json();
     setRoastData(data);
     setLoading(false);

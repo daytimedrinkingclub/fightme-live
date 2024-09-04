@@ -14,8 +14,7 @@ export default function HeadToHeadForm({ setComparisonData, setLoading }: { setC
     }
     setError('');
     setLoading(true);
-    const apiKey = localStorage.getItem('anthropicApiKey');
-    const response = await fetch(`/api/headtohead?username1=${username1}&username2=${username2}&apiKey=${apiKey}`);
+    const response = await fetch(`/api/headtohead?username1=${username1}&username2=${username2}`);
     const data = await response.json();
     setComparisonData(data);
     setLoading(false);
