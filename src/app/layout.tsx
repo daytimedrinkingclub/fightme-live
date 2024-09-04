@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${permanentMarker.variable}`}>{children}</body>
+      <body className={`${inter.className} ${permanentMarker.className}`}>{children}</body>
     </html>
   );
 }

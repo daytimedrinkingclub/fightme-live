@@ -8,9 +8,8 @@ import { useRouter } from 'next/navigation'
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
-
   useEffect(() => {
-    const updatePosition = (e) => setPosition({ x: e.clientX, y: e.clientY })
+    const updatePosition = (e: MouseEvent) => setPosition({ x: e.clientX, y: e.clientY })
     window.addEventListener('mousemove', updatePosition)
     return () => window.removeEventListener('mousemove', updatePosition)
   }, [])
@@ -181,6 +180,7 @@ const LandingPage = () => {
           >
             <h3 className="text-2xl font-bold mb-4">Roast of the Day</h3>
             <p className="text-gray-400 italic">
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
               "Your commit history reads like a horror novel"
             </p>
           </motion.div>
