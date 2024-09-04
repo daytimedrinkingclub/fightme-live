@@ -1,6 +1,18 @@
 import { motion } from 'framer-motion';
+import { FaTwitter } from 'react-icons/fa';
 
 export default function RoastDisplay({ roastData }: { roastData: { roast: string, name: string, avatar_url: string } }) {
+  const shareOnTwitter = () => {
+    const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
+
+Get your own savage roast at
+https://fightme.live/
+
+#GitHubRoast #CodeBurn #DevHumor`);
+    
+    window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -12,7 +24,14 @@ export default function RoastDisplay({ roastData }: { roastData: { roast: string
         <img src={roastData.avatar_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
         <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left">{roastData.name}</h2>
       </div>
-      <p className="text-gray-300 text-lg italic">{roastData.roast}</p>
+      <p className="text-gray-300 text-lg italic mb-4">{roastData.roast}</p>
+      <button
+        onClick={shareOnTwitter}
+        className="flex items-center justify-center bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition duration-300"
+      >
+        <FaTwitter className="mr-2" />
+        Share on Twitter
+      </button>
     </motion.div>
   );
 }
