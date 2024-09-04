@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { FaGithub, FaInstagram, FaSpotify, FaTwitter, FaFacebook } from 'react-icons/fa'
 import { RiFireLine } from 'react-icons/ri'
+import { useRouter } from 'next/navigation'
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -57,6 +58,7 @@ const LandingPage = () => {
   const [roastIntensity, setRoastIntensity] = useState(50)
   const [easterEggCount, setEasterEggCount] = useState(0)
   const fireAnimation = useAnimation()
+  const router = useRouter()
 
   const triggerEasterEgg = () => {
     setEasterEggCount(prevCount => {
@@ -71,6 +73,15 @@ const LandingPage = () => {
       }
       return newCount
     })
+  }
+
+  const handleButtonClick = (platform: string) => {
+    setActiveTab(platform)
+    if (platform === 'github') {
+      router.push('/githubroast')
+    } else if (platform === 'github-vs') {
+      router.push('/headtohead')
+    }
   }
 
   return (
@@ -121,8 +132,8 @@ const LandingPage = () => {
             Your online presence is about to get roasted harder than a marshmallow in hell!
           </motion.p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
-            {['github', 'instagram', 'spotify'].map((platform, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            {['github', 'github-vs', 'instagram', 'spotify'].map((platform, index) => (
               <motion.div
                 key={platform}
                 initial={{ opacity: 0, y: 50 }}
@@ -130,7 +141,7 @@ const LandingPage = () => {
                 transition={{ delay: 0.2 * (index + 4) }}
               >
                 <button
-                  onClick={() => setActiveTab(platform)}
+                  onClick={() => handleButtonClick(platform)}
                   className={`w-full p-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-xl ${
                     activeTab === platform
                       ? 'bg-gradient-to-r from-red-500 to-yellow-500'
@@ -139,10 +150,19 @@ const LandingPage = () => {
                 >
                   <div className="flex flex-col items-center">
                     {platform === 'github' && <FaGithub className="text-3xl mb-2" />}
+                    {platform === 'github-vs' && (
+                      <div className="flex items-center mb-2">
+                        <FaGithub className="text-2xl mr-1" />
+                        <span className="text-xl font-bold">VS</span>
+                        <FaGithub className="text-2xl ml-1" />
+                      </div>
+                    )}
                     {platform === 'instagram' && <FaInstagram className="text-3xl mb-2" />}
                     {platform === 'spotify' && <FaSpotify className="text-3xl mb-2" />}
-                    <h3 className="text-lg font-bold capitalize mb-1">{platform}</h3>
-                    {platform === 'github' ? (
+                    <h3 className="text-lg font-bold capitalize mb-1">
+                      {platform === 'github-vs' ? 'GitHub H2H' : platform}
+                    </h3>
+                    {platform === 'github' || platform === 'github-vs' ? (
                       <p className="text-xs">Ready to burn!</p>
                     ) : (
                       <p className="text-xs">Roasting soon...</p>
