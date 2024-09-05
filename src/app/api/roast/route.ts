@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
 
-  const prompt = `Give a short and harsh roasting for the following GitHub profile: ${username}. Here are the details: "${JSON.stringify(userDetails)}"`;
+  const prompt = `Give a short and harsh roasting in 100 words for the following GitHub profile: ${username}. Here are the details: "${JSON.stringify(userDetails)}"`;
 
   let roast: string = '';
   try {

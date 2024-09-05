@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
 
-  const prompt = `Compare the following GitHub profiles and declare the winner in a short and harsh manner:
+  const prompt = `Compare the following GitHub profiles and declare the winner in a short 100 words and harsh manner:
 
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
