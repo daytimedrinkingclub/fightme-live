@@ -8,15 +8,27 @@ export default function RoastDisplay({ roastData }: { roastData: { roast: string
     const element = document.getElementById('roast-card');
     if (!element) {
       console.error('Roast card element not found');
-      console.log('Available elements with IDs:', document.querySelectorAll('[id]'));
       return;
     }
 
     console.log('Roast card element found:', element);
+    console.log('Element dimensions:', element.offsetWidth, 'x', element.offsetHeight);
+
+    // Wait for a short time to ensure all elements are rendered
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     console.log('Capturing roast card as image');
-    const canvas = await html2canvas(element);
+    const canvas = await html2canvas(element, {
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+      scale: 2, // Increase scale for better quality
+      logging: true, // Enable logging for debugging
+      useCORS: true // This might help with loading external images (like avatars)
+    });
+
+    console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
     const imageData = canvas.toDataURL('image/png');
-    console.log('Image data generated');
+    console.log('Image data generated, length:', imageData.length);
 
     console.log('Sending image data to API');
     const response = await fetch('/api/upload-image', {
