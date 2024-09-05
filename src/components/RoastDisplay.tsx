@@ -49,14 +49,16 @@ export default function RoastDisplay({ roastData }: { roastData: { roast: string
     const { imageUrl } = await response.json();
     console.log('Image URL received:', imageUrl);
 
-    const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
+    const tweetText = encodeURIComponent(`🔥 I just got savagely roasted on GitHub! Can you handle the heat?
 
-Get your own savage roast at
-https://fightme.live/
+${imageUrl}
+
+Check out my burn and get your own roast at:
+https://fightme.live
 
 #GitHubRoast #CodeBurn #DevHumor`);
 
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(imageUrl)}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
     console.log('Opening Twitter share URL:', twitterUrl);
     window.open(twitterUrl, '_blank');
   };
