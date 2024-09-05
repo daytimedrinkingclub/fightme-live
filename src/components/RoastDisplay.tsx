@@ -1,20 +1,57 @@
 import { motion } from 'framer-motion';
 import { FaTwitter } from 'react-icons/fa';
+import html2canvas from 'html2canvas';
 
 export default function RoastDisplay({ roastData }: { roastData: { roast: string, name: string, avatar_url: string } }) {
-  const shareOnTwitter = () => {
+  const shareOnTwitter = async () => {
+    console.log('Starting shareOnTwitter function');
+    const element = document.getElementById('roast-card');
+    if (!element) {
+      console.error('Roast card element not found');
+      console.log('Available elements with IDs:', document.querySelectorAll('[id]'));
+      return;
+    }
+
+    console.log('Roast card element found:', element);
+    console.log('Capturing roast card as image');
+    const canvas = await html2canvas(element);
+    const imageData = canvas.toDataURL('image/png');
+    console.log('Image data generated');
+
+    console.log('Sending image data to API');
+    const response = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imageData }),
+    });
+
+    console.log('API response received:', response);
+
+    if (!response.ok) {
+      console.error('API request failed:', response.statusText);
+      return;
+    }
+
+    const { imageUrl } = await response.json();
+    console.log('Image URL received:', imageUrl);
+
     const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
 
 Get your own savage roast at
 https://fightme.live/
 
 #GitHubRoast #CodeBurn #DevHumor`);
-    
-    window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(imageUrl)}`;
+    console.log('Opening Twitter share URL:', twitterUrl);
+    window.open(twitterUrl, '_blank');
   };
 
   return (
     <motion.div
+      id="roast-card"  // Add this ID to the outer div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
