@@ -9,7 +9,7 @@ import CustomCursor from '../../components/CustomCursor';
 import FlameAnimation from '../../components/FlameAnimation';
 
 export default function GitHubRoast() {
-  const [roastData, setRoastData] = useState<{ roast: string, name: string, avatar_url: string } | null>(null);
+  const [roastData, setRoastData] = useState<{ roast: string, name: string, avatar_url: string, username: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
   return (
@@ -31,7 +31,10 @@ export default function GitHubRoast() {
         >
           GitHub Roaster
         </motion.h1>
-        <InputForm setRoastData={setRoastData} setLoading={setLoading} />
+        <InputForm
+          setRoastData={(data) => setRoastData({ ...data, username: data.name })}
+          setLoading={setLoading}
+        />
         {loading && (
           <div className="flex justify-center mt-8">
             <div className="loader"></div>
