@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.27.1",
     "@fontsource/permanent-marker": "^5.0.13",
     "ai": "^3.3.21",
+    "firebase": "^10.13.1",
     "framer-motion": "^11.4.0",
     "next": "14.2.7",
     "openai": "^4.57.0",
