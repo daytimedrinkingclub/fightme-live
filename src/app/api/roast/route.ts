@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import { ref, get, set } from 'firebase/database';
+import { db } from '@/lib/firebase';
 
 const openAIClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
@@ -142,6 +144,16 @@ export async function GET(req: NextRequest) {
   }
 
   console.log('Generated Roast:', roast);
+
+  const roastRef = ref(db, `roasts/${username}`);
+  const roastSnapshot = await get(roastRef);
+
+  if (roastSnapshot.exists()) {
+    const existingRoast = roastSnapshot.val();
+    return NextResponse.json(existingRoast);
+  }
+
+  await set(roastRef, { username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
 
   return NextResponse.json({ username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
 }
