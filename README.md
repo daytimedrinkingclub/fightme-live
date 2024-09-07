@@ -1,7 +1,6 @@
-# GitHub Roaster
+# Fight Me Live
 
-This is a  project that roasts GitHub profiles  using OpenAI and Anthropic APIs.
-
+Go fight on [fightme.live](https://fightme.live)
 # Architecture
 
 ![Architecture](https://github.com/daytimedrinkingclub/fightme-live/blob/main/arch?raw=true)
@@ -15,8 +14,8 @@ This is a  project that roasts GitHub profiles  using OpenAI and Anthropic APIs.
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/roaster.git
-    cd roaster
+    git clone https://github.com/daytimedrinkingclub/fightme-live.git
+    cd fightme-live
     ```
 
 2. Install the dependencies:
@@ -31,9 +30,8 @@ This is a  project that roasts GitHub profiles  using OpenAI and Anthropic APIs.
     cp .env.template .env
     ```
 
-    Edit the `.env` file and add your OpenAI and Anthropic API keys:
+    Edit the `.env` file and add Anthropic API keys:
     ```plaintext
-    OPENAI_API_KEY=your_openai_api_key
     ANTHROPIC_API_KEY=your_anthropic_api_key
     ```
 
