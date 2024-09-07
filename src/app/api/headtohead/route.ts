@@ -105,18 +105,17 @@ export async function GET(req: NextRequest) {
   const username1 = searchParams.get('username1');
   const username2 = searchParams.get('username2');
 
-  if (!username1 || !username2 ) {
-    return NextResponse.json({ error: 'Both usernames and API key are required' }, { status: 400 });
+  if (!username1 || !username2) {
+    return NextResponse.json({ error: 'Both usernames are required' }, { status: 400 });
   }
-
-  
 
   let userDetails1, userDetails2;
   try {
     userDetails1 = await getUserDetails(username1);
     userDetails2 = await getUserDetails(username2);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 404 });
+    console.error('Error fetching user details:', error);
+    return NextResponse.json({ error: `Failed to fetch user details: ${error.message}` }, { status: 404 });
   }
 
   const prompt = `Compare the following GitHub profiles and declare the winner in a short 100 words and harsh manner:
@@ -142,9 +141,9 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     const contentArray = completion.content as { type: string; text: string }[];
 
     battleResult = contentArray[0].text || 'Could not generate comparison.';
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error generating comparison:', error);
-    return NextResponse.json({ error: 'Could not generate comparison' }, { status: 500 });
+    return NextResponse.json({ error: `Failed to generate comparison: ${error.message}` }, { status: 500 });
   }
 
   console.log('Generated Battle Result:', battleResult);
