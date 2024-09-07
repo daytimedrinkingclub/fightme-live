@@ -8,11 +8,16 @@ import { useRouter } from 'next/navigation'
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
+    setIsClient(true)
     const updatePosition = (e: MouseEvent) => setPosition({ x: e.clientX, y: e.clientY })
     window.addEventListener('mousemove', updatePosition)
     return () => window.removeEventListener('mousemove', updatePosition)
   }, [])
+
+  if (!isClient) return null
 
   return (
     <motion.div
@@ -93,24 +98,41 @@ const LandingPage = () => {
         transition={{ duration: 0.5 }}
         className="container mx-auto px-4 py-8"
       >
-        <header className="flex justify-between items-center mb-12">
-          <motion.h1
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
-            className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500"
-            onClick={triggerEasterEgg}
-          >
-            FightMe
-          </motion.h1>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
-          >
-            Roast Me Now!
-          </motion.button>
-        </header>
+        <header className="flex flex-col sm:flex-row justify-between items-center mb-12">
+  <motion.div
+    initial={{ x: -100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+    className="mb-4 sm:mb-0 flex items-center"
+  >
+    <h1
+      className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500"
+      onClick={triggerEasterEgg}
+    >
+      FightMe
+    </h1>
+    <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
+      <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
+      LIVE
+    </div>
+  </motion.div>
+  <motion.p
+    initial={{ x: 100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
+    className="text-sm text-gray-400"
+  >
+    Powered by{' '}
+    <a
+      href="https://incubatorop.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-red-500 hover:text-red-400 transition duration-300"
+    >
+      IncubatorOP
+    </a>
+  </motion.p>
+</header>
 
         <main>
           <motion.h2
@@ -159,7 +181,7 @@ const LandingPage = () => {
                     {platform === 'instagram' && <FaInstagram className="text-3xl mb-2" />}
                     {platform === 'spotify' && <FaSpotify className="text-3xl mb-2" />}
                     <h3 className="text-lg font-bold capitalize mb-1">
-                      {platform === 'github-vs' ? 'GitHub H2H' : platform}
+                      {platform === 'github-vs' ? 'GitHub 1v1' : platform}
                     </h3>
                     {platform === 'github' || platform === 'github-vs' ? (
                       <p className="text-xs">Ready to burn!</p>
@@ -196,7 +218,7 @@ const LandingPage = () => {
         </main>
 
         <footer className="mt-16 text-center text-gray-500">
-          <p>&copy; 2023 FightMe. All rights reserved. If you can't stand the heat, get out of the roast!</p>
+          <p>&copy; 2024 FightMe. All rights reserved. If you can't stand the heat, get out of the roast!</p>
         </footer>
       </motion.div>
     </div>
