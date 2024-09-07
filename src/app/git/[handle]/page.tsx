@@ -8,6 +8,7 @@ export default function GitRoastPage() {
   const { handle } = useParams();
   const [roastData, setRoastData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [enteredUsername, setEnteredUsername] = useState(''); // Assuming you have access to the enteredUsername value
 
   useEffect(() => {
     async function fetchRoast() {
@@ -39,5 +40,5 @@ export default function GitRoastPage() {
     return <div>Roast not found</div>;
   }
 
-  return <RoastDisplay roastData={roastData} />;
+  return <RoastDisplay roastData={roastData} enteredUsername={enteredUsername} />;
 }

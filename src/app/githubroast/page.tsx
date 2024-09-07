@@ -11,6 +11,7 @@ import FlameAnimation from '../../components/FlameAnimation';
 export default function GitHubRoast() {
   const [roastData, setRoastData] = useState<{ roast: string, name: string, avatar_url: string, username: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [enteredUsername, setEnteredUsername] = useState('');
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden flex flex-col items-center justify-center">
@@ -34,13 +35,14 @@ export default function GitHubRoast() {
         <InputForm
           setRoastData={(data) => setRoastData({ ...data, username: data.name })}
           setLoading={setLoading}
+          setEnteredUsername={setEnteredUsername}
         />
         {loading && (
           <div className="flex justify-center mt-8">
             <div className="loader"></div>
           </div>
         )}
-        {roastData && <RoastDisplay roastData={roastData} />}
+        {roastData && <RoastDisplay roastData={roastData} enteredUsername={enteredUsername} />}
       </motion.div>
     </div>
   );

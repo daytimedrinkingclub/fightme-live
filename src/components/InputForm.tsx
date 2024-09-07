@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-export default function InputForm({ setRoastData, setLoading }: { setRoastData: (data: { roast: string, name: string, avatar_url: string }) => void, setLoading: (loading: boolean) => void }) {
+export default function InputForm({ setRoastData, setLoading, setEnteredUsername }: { 
+  setRoastData: (data: { roast: string, name: string, avatar_url: string }) => void, 
+  setLoading: (loading: boolean) => void,
+  setEnteredUsername: (username: string) => void 
+}) {
   const [username, setUsername] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setEnteredUsername(username);
     const response = await fetch(`/api/roast?username=${username}`);
     const data = await response.json();
     setRoastData(data);
