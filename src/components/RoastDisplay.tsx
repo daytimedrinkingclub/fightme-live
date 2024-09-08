@@ -41,10 +41,30 @@ Check out my savage roast at ${shareableLink}
         document.body.appendChild(tempContainer);
         
         const clone = contentRef.current.cloneNode(true) as HTMLElement;
-        clone.style.width = `${contentRef.current.offsetWidth}px`;
-        clone.style.padding = '20px'; // Add some padding
-        clone.style.background = '#1F2937'; // Match the background color
+        clone.style.width = '600px'; // Set a fixed width for consistency
+        clone.style.padding = '20px';
+        clone.style.background = '#1F2937';
         
+        // Adjust styles for consistent layout
+        const avatarImg = clone.querySelector('img');
+        if (avatarImg) {
+          avatarImg.style.width = '96px';
+          avatarImg.style.height = '96px';
+          avatarImg.style.marginRight = '16px';
+        }
+        
+        const nameElement = clone.querySelector('h2');
+        if (nameElement) {
+          nameElement.style.fontSize = '24px';
+          nameElement.style.textAlign = 'left';
+        }
+        
+        const flexContainer = clone.querySelector('.flex');
+        if (flexContainer) {
+          flexContainer.classList.remove('flex-col', 'md:flex-row');
+          flexContainer.classList.add('flex-row');
+        }
+
         // Add FightMe.Live logo as SVG with gradient and LIVE badge
         const logoSvg = `
           <svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50">
@@ -76,7 +96,7 @@ Check out my savage roast at ${shareableLink}
         const dataUrl = await toPng(clone, {
           cacheBust: true,
           imagePlaceholder: roastData.avatar_url,
-          width: clone.offsetWidth,
+          width: 600, // Set fixed width
           height: clone.offsetHeight,
         });
         
