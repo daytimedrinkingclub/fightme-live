@@ -29,7 +29,7 @@ export default function HeadToHead() {
           transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
           className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 mb-8 text-center"
         >
-          GitHub Head-to-Head
+          GitHub 1 vs 1
         </motion.h1>
         {!comparisonData && <HeadToHeadForm setComparisonData={setComparisonData} setLoading={setLoading} />}
         {loading && (

@@ -14,10 +14,19 @@ export default function HeadToHeadForm({ setComparisonData, setLoading }: { setC
     }
     setError('');
     setLoading(true);
-    const response = await fetch(`/api/headtohead?username1=${username1}&username2=${username2}`);
-    const data = await response.json();
-    setComparisonData(data);
-    setLoading(false);
+    try {
+      const response = await fetch(`/api/headtohead?username1=${username1}&username2=${username2}`);
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'An error occurred');
+      }
+      console.log(data);
+      setComparisonData(data);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
