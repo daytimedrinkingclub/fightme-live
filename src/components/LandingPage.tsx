@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { RoastStats } from './RoastStats'
 import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
 import { Github, Instagram, Flame, AlertCircle } from "lucide-react"
+import { RecentRoasts } from './RecentRoasts';
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -239,6 +240,7 @@ const LandingPage = () => {
             transition={{ delay: 1.2, type: 'spring', stiffness: 120 }}
           >
           </motion.div>
+          <RecentRoasts />
         </main>
       </motion.div>
     </div>
