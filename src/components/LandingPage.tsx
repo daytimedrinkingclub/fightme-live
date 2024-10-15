@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { db } from '../lib/firebase';
+import { ref, get } from 'firebase/database';
 import { motion, useAnimation } from 'framer-motion'
-import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
-import { RiFireLine } from 'react-icons/ri'
 import { useRouter } from 'next/navigation'
 import { RoastStats } from './RoastStats'
-import { Github, Instagram, Spotify, Flame, AlertCircle } from "lucide-react"
+import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
+import { Github, Instagram, Flame, AlertCircle } from "lucide-react"
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -65,6 +66,31 @@ const LandingPage = () => {
   const [easterEggCount, setEasterEggCount] = useState(0)
   const fireAnimation = useAnimation()
   const router = useRouter()
+  const [totalRoasts, setTotalRoasts] = useState(0)
+
+  useEffect(() => {
+    // Simulating fetching total roasts from an API
+    const fetchTotalRoasts = async () => {
+      const roastsRef = ref(db, 'roasts');
+      const snapshot = await get(roastsRef);
+      
+      let total = 0;
+      let single = 0;
+      let headToHead = 0;
+
+      snapshot.forEach((childSnapshot) => {
+        const roast = childSnapshot.val();
+        total++;
+        if (roast.type === 'single') {
+          single++;
+        } else if (roast.type === '1v1') {
+          headToHead++;
+        }
+      });
+      setTotalRoasts(total+100);
+    }
+    fetchTotalRoasts()
+  }, [])
 
   const triggerEasterEgg = () => {
     setEasterEggCount(prevCount => {
@@ -95,85 +121,105 @@ const LandingPage = () => {
       <CustomCursor />
       <FlameAnimation />
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
         className="container mx-auto px-4 py-8"
       >
-         <header className="flex justify-between items-center mb-8">
-        <div className="flex items-center space-x-2">
-          <Flame className="w-8 h-8 text-red-500" />
-          <h1 className="text-2xl font-bold">FightMe</h1>
-          <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
-      <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
-      LIVE
-    </div>
-        </div>
-        <p className="text-sm text-gray-400"><motion.p
-    initial={{ x: 100, opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
-    className="text-sm text-gray-400"
-  >
-    Powered by{' '}
-    <a
-      href="https://incubatorop.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-red-500 hover:text-red-400 transition duration-300"
-    >
-      IncubatorOP
-    </a>
-  </motion.p></p>
-      </header>
-
-        <main>
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-5xl md:text-7xl font-bold mb-8 text-center"
+        <header className="flex justify-between items-center mb-12">
+          <motion.div 
+            className="flex items-center space-x-2"
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
           >
-            Get <span className="text-red-500">Burned</span> to a Crisp!
-          </motion.h2>
-
+            <Flame className="w-8 h-8 text-red-500" />
+            <h1 className="text-2xl font-bold">FightMe</h1>
+            <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
+              <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
+              LIVE
+            </div>
+          </motion.div>
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="text-xl md:text-2xl text-gray-400 text-center mb-12"
+            initial={{ x: 50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
+            className="text-sm text-gray-400"
           >
-            Your online presence is about to get roasted harder than a marshmallow in hell!
+            Powered by{' '}
+            <a
+              href="https://incubatorop.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-red-500 hover:text-red-400 transition duration-300"
+            >
+              IncubatorOP
+            </a>
           </motion.p>
+        </header>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <main className="space-y-16">
+          <div className="text-center space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, type: 'spring', stiffness: 120 }}
+              className="text-5xl md:text-7xl font-bold mb-8"
+            >
+              Get <span className="text-red-500">Burned</span> to a Crisp!
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, type: 'spring', stiffness: 120 }}
+              className="text-xl md:text-2xl text-gray-400"
+            >
+              Your online presence is about to get roasted harder than a marshmallow in hell!
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, type: 'spring', stiffness: 120 }}
+              className="text-3xl md:text-4xl font-bold text-red-500"
+            >
+              {totalRoasts.toLocaleString()} Roasts Served! 🔥
+            </motion.div>
+          </div>
+
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, type: 'spring', stiffness: 120 }}
+          >
             {['github', 'github-vs', 'instagram', 'spotify'].map((platform, index) => (
               <motion.div
                 key={platform}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 * (index + 4) }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <button
                   onClick={() => handleButtonClick(platform)}
-                  className={`w-full p-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-xl ${
+                  className={`w-full p-6 rounded-lg transition duration-300 ease-in-out ${
                     activeTab === platform
                       ? 'bg-gradient-to-r from-red-500 to-yellow-500'
                       : 'bg-gray-800 hover:bg-gray-700'
                   }`}
                 >
-                  <div className="flex flex-col items-center">
-                    {platform === 'github' && <FaGithub className="text-3xl mb-2" />}
+                  <div className="flex flex-col items-center space-y-3">
+                    {platform === 'github' && <Github className="w-8 h-8" />}
                     {platform === 'github-vs' && (
-                      <div className="flex items-center mb-2">
-                        <FaGithub className="text-2xl mr-1" />
-                        <span className="text-xl font-bold">VS</span>
-                        <FaGithub className="text-2xl ml-1" />
+                      <div className="flex items-center">
+                        <Github className="w-6 h-6 mr-1" />
+                        <span className="text-xl font-bold mx-1">VS</span>
+                        <Github className="w-6 h-6 ml-1" />
                       </div>
                     )}
-                    {platform === 'instagram' && <FaInstagram className="text-3xl mb-2" />}
-                    {platform === 'spotify' && <FaSpotify className="text-3xl mb-2" />}
-                    <h3 className="text-lg font-bold capitalize mb-1">
+                    {platform === 'instagram' && <Instagram className="w-8 h-8" />}
+                    {platform === 'spotify' && <FaSpotify className="w-8 h-8" />}
+                    <h3 className="text-lg font-bold capitalize">
                       {platform === 'github-vs' ? 'GitHub 1v1' : platform}
                     </h3>
                     {platform === 'github' || platform === 'github-vs' ? (
@@ -185,12 +231,15 @@ const LandingPage = () => {
                 </button>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-<RoastStats />
-          
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, type: 'spring', stiffness: 120 }}
+          >
+          </motion.div>
         </main>
-
       </motion.div>
     </div>
   )
