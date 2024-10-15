@@ -5,6 +5,7 @@ import { motion, useAnimation } from 'framer-motion'
 import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
 import { RiFireLine } from 'react-icons/ri'
 import { useRouter } from 'next/navigation'
+import { RoastStats } from './RoastStats'
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -194,32 +195,10 @@ const LandingPage = () => {
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="bg-gradient-to-r from-red-600 to-yellow-600 p-6 rounded-lg shadow-lg max-w-xl mx-auto"
-          >
-            <h3 className="text-2xl font-bold mb-3 text-center text-white">Roast of the Day</h3>
-            <p className="text-lg text-white italic text-center">
-              "Your commit history reads like a horror novel"
-            </p>
-            <div className="mt-3 flex justify-center">
-              <motion.div
-                animate={fireAnimation}
-                className="text-3xl text-yellow-300"
-              >
-                <RiFireLine />
-              </motion.div>
-            </div>
-          </motion.div>
-
+<RoastStats />
           
         </main>
 
-        <footer className="mt-16 text-center text-gray-500">
-          <p>&copy; 2024 FightMe. All rights reserved. If you can't stand the heat, get out of the roast!</p>
-        </footer>
       </motion.div>
     </div>
   )
