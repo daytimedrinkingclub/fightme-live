@@ -6,6 +6,7 @@ import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
 import { RiFireLine } from 'react-icons/ri'
 import { useRouter } from 'next/navigation'
 import { RoastStats } from './RoastStats'
+import { Github, Instagram, Spotify, Flame, AlertCircle } from "lucide-react"
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -99,25 +100,16 @@ const LandingPage = () => {
         transition={{ duration: 0.5 }}
         className="container mx-auto px-4 py-8"
       >
-        <header className="flex flex-col sm:flex-row justify-between items-center mb-12">
-  <motion.div
-    initial={{ x: -100, opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
-    className="mb-4 sm:mb-0 flex items-center"
-  >
-    <h1
-      className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500"
-      onClick={triggerEasterEgg}
-    >
-      FightMe
-    </h1>
-    <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
+         <header className="flex justify-between items-center mb-8">
+        <div className="flex items-center space-x-2">
+          <Flame className="w-8 h-8 text-red-500" />
+          <h1 className="text-2xl font-bold">FightMe</h1>
+          <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
       <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
       LIVE
     </div>
-  </motion.div>
-  <motion.p
+        </div>
+        <p className="text-sm text-gray-400"><motion.p
     initial={{ x: 100, opacity: 0 }}
     animate={{ x: 0, opacity: 1 }}
     transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
@@ -132,8 +124,8 @@ const LandingPage = () => {
     >
       IncubatorOP
     </a>
-  </motion.p>
-</header>
+  </motion.p></p>
+      </header>
 
         <main>
           <motion.h2
