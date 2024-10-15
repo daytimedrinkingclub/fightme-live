@@ -146,14 +146,15 @@ export async function GET(req: NextRequest) {
   console.log('Generated Roast:', roast);
 
   const roastRef = ref(db, `roasts/${username}`);
-  const roastSnapshot = await get(roastRef);
+  const roastData = {
+    username,
+    roast,
+    name: userDetails.name,
+    avatar_url: userDetails.avatar_url,
+    type: 'single',
+    timestamp: Date.now()
+  };
+  await set(roastRef, roastData);
 
-  if (roastSnapshot.exists()) {
-    const existingRoast = roastSnapshot.val();
-    return NextResponse.json(existingRoast);
-  }
-
-  await set(roastRef, { username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
-
-  return NextResponse.json({ username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
+  return NextResponse.json(roastData);
 }
