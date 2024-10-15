@@ -75,7 +75,8 @@ export function RecentRoasts() {
 
   useEffect(() => {
     const roastsRef = ref(db, 'roasts');
-    const recentRoastsQuery = query(roastsRef, orderByChild('timestamp'), limitToLast(12));
+    const recentRoastsQuery = query(roastsRef, orderByChild('timestamp'));
+    console.log("recentRoastsQuery", recentRoastsQuery);
 
     const unsubscribe = onValue(recentRoastsQuery, (snapshot) => {
       const roasts: Roast[] = [];

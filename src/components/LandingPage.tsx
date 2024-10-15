@@ -74,6 +74,7 @@ const LandingPage = () => {
     const fetchTotalRoasts = async () => {
       const roastsRef = ref(db, 'roasts');
       const snapshot = await get(roastsRef);
+      console.log("snapshot", snapshot);
       
       let total = 0;
       let single = 0;
@@ -88,6 +89,7 @@ const LandingPage = () => {
           headToHead++;
         }
       });
+      console.log("total", total);
       setTotalRoasts(total+100);
     }
     fetchTotalRoasts()
