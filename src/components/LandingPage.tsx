@@ -7,8 +7,9 @@ import { motion, useAnimation } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { RoastStats } from './RoastStats'
 import { FaGithub, FaInstagram, FaSpotify, FaTwitter } from 'react-icons/fa'
-import { Github, Instagram, Flame, AlertCircle } from "lucide-react"
+import { Flame, AlertCircle } from "lucide-react"
 import { RecentRoasts } from './RecentRoasts';
+import { FaX, FaXTwitter } from 'react-icons/fa6';
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -201,7 +202,7 @@ const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, type: 'spring', stiffness: 120 }}
           >
-            {['github', 'github-vs', 'instagram', 'spotify'].map((platform, index) => (
+            {['github', 'github-vs', 'twitter', 'spotify'].map((platform, index) => (
               <motion.div
                 key={platform}
                 whileHover={{ scale: 1.05 }}
@@ -216,15 +217,15 @@ const LandingPage = () => {
                   }`}
                 >
                   <div className="flex flex-col items-center space-y-3">
-                    {platform === 'github' && <Github className="w-8 h-8" />}
+                    {platform === 'github' && <FaGithub className="w-8 h-8" />}
                     {platform === 'github-vs' && (
                       <div className="flex items-center">
-                        <Github className="w-6 h-6 mr-1" />
+                        <FaGithub className="w-6 h-6 mr-1" />
                         <span className="text-xl font-bold mx-1">VS</span>
-                        <Github className="w-6 h-6 ml-1" />
+                        <FaGithub className="w-6 h-6 ml-1" />
                       </div>
                     )}
-                    {platform === 'instagram' && <Instagram className="w-8 h-8" />}
+                    {platform === 'twitter' && <FaXTwitter  className="w-8 h-8" />}
                     {platform === 'spotify' && <FaSpotify className="w-8 h-8" />}
                     <h3 className="text-lg font-bold capitalize">
                       {platform === 'github-vs' ? 'GitHub 1v1' : platform}
