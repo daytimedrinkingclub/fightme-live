@@ -8,7 +8,7 @@ import { ref, query, limitToLast, onValue, orderByChild } from 'firebase/databas
 
 interface Roast {
   id: string;
-  type: 'single' | '1v1';
+  type: 'single' | '1v1' | 'twitter';
   timestamp: number;
   username?: string;
   username1?: string;
@@ -19,6 +19,7 @@ interface Roast {
   avatar_url?: string;
   avatar_url1?: string;
   avatar_url2?: string;
+  profile_image_url?: string;
 }
 
 const ReviewCard = ({ roast }: { roast: Roast }) => {
@@ -30,10 +31,10 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
         "transition-colors duration-200"
       )}
     >
-      {roast.type === 'single' ? (
+      {roast.type === 'single' || roast.type === 'twitter' ? (
         <>
           <div className="flex flex-row items-center gap-2">
-            <img className="rounded-full" width="40" height="40" alt="" src={roast.avatar_url} />
+            <img className="rounded-full" width="40" height="40" alt="" src={roast.type === 'twitter' ? roast.profile_image_url : roast.avatar_url} />
             <div className="flex flex-col">
               <figcaption className="text-sm font-medium text-white">
                 {roast.name}
@@ -75,22 +76,22 @@ export function RecentRoasts() {
 
   useEffect(() => {
     const roastsRef = ref(db, 'roasts');
-    const recentRoastsQuery = query(roastsRef, orderByChild('timestamp'));
-    console.log("recentRoastsQuery", recentRoastsQuery);
+    const recentRoastsQuery = query(roastsRef, orderByChild('timestamp'), limitToLast(20));
 
     const unsubscribe = onValue(recentRoastsQuery, (snapshot) => {
       const roasts: Roast[] = [];
       snapshot.forEach((childSnapshot) => {
         const roast = childSnapshot.val();
-        if (roast.type === 'single') {
+        if (roast.type === 'single' || roast.type === 'twitter') {
           roasts.push({
             id: childSnapshot.key,
-            type: 'single',
+            type: roast.type,
             timestamp: roast.timestamp,
             username: roast.username,
             roast: roast.roast,
             name: roast.name,
             avatar_url: roast.avatar_url,
+            profile_image_url: roast.profile_image_url,
           });
         } else if (roast.type === '1v1') {
           roasts.push({

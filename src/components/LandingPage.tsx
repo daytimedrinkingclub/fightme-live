@@ -232,7 +232,7 @@ const LandingPage = () => {
                     <h3 className="text-lg font-bold capitalize">
                       {platform === 'github-vs' ? 'GitHub 1v1' : platform}
                     </h3>
-                    {platform === 'github' || platform === 'github-vs' ? (
+                    {platform === 'github' || platform === 'github-vs' || platform === 'twitter' ? (
                       <p className="text-xs">Ready to burn!</p>
                     ) : (
                       <p className="text-xs">Roasting soon...</p>
