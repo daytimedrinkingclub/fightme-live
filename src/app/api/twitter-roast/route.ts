@@ -62,7 +62,9 @@ Use these aspects to create a humorous roast that pokes fun at their 'Founder Mo
       messages: [{ role: 'user', content: prompt }],
     });
 
-    const roast = completion.content[0].text;
+    const roast = completion.content[0].type === 'text' 
+      ? completion.content[0].text 
+      : 'Unable to generate roast';
 
     return NextResponse.json({
       username,
