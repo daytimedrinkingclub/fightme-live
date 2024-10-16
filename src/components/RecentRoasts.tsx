@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Marquee from "../components/ui/marquee";
 import { db } from '../lib/firebase';
 import { ref, query, limitToLast, onValue, orderByChild } from 'firebase/database';
+import { FaGithub, FaTwitter } from 'react-icons/fa';
 
 interface Roast {
   id: string;
@@ -35,12 +36,17 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
         <>
           <div className="flex flex-row items-center gap-2">
             <img className="rounded-full" width="40" height="40" alt="" src={roast.type === 'twitter' ? roast.profile_image_url : roast.avatar_url} />
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-grow">
               <figcaption className="text-sm font-medium text-white">
                 {roast.name}
               </figcaption>
               <p className="text-xs font-medium text-gray-400">@{roast.username}</p>
             </div>
+            {roast.type === 'twitter' ? (
+              <FaTwitter className="text-blue-400" />
+            ) : (
+              <FaGithub className="text-white" />
+            )}
           </div>
           <blockquote className="mt-2 text-sm text-gray-300">
             {roast.roast ? `${roast.roast.substring(0, 100)}...` : ''}
