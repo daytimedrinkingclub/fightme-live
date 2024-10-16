@@ -117,6 +117,8 @@ const LandingPage = () => {
       router.push('/githubroast')
     } else if (platform === 'github-vs') {
       router.push('/headtohead')
+    } else if (platform === 'twitter') {
+      router.push('/twitterroast')
     }
   }
 
