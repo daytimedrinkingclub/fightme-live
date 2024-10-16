@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import { db } from '../../../lib/firebase';
+import { ref, set } from 'firebase/database';
 
 const openAIClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
@@ -148,7 +150,7 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
 
   console.log('Generated Battle Result:', battleResult);
 
-  return NextResponse.json({
+  const battleData = {
     username1,
     username2,
     battleResult,
@@ -156,5 +158,12 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     avatar_url1: userDetails1.avatar_url,
     name2: userDetails2.name,
     avatar_url2: userDetails2.avatar_url,
-  });
+    type: '1v1',
+    timestamp: Date.now()
+  };
+
+  const roastRef = ref(db, `roasts/${username1}_vs_${username2}`);
+  await set(roastRef, battleData);
+
+  return NextResponse.json(battleData);
 }

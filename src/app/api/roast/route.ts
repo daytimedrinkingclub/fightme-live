@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
-import { ref, get, set } from 'firebase/database';
-import { db } from '@/lib/firebase';
-
-const openAIClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+import { db } from '../../../lib/firebase';
+import { ref, set } from 'firebase/database';
 
 const anthropicClient = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -105,55 +101,62 @@ async function getUserDetails(username: string) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get('username');
-  
 
-  if (!username ) {
-    return NextResponse.json({ error: 'Username and API key are required' }, { status: 400 });
+  if (!username) {
+    return NextResponse.json({ error: 'Username is required' }, { status: 400 });
   }
 
+  console.log(`Processing roast request for username: ${username}`);
 
-
-  let userDetails;
   try {
-    userDetails = await getUserDetails(username);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 404 });
-  }
+    const userDetails = await getUserDetails(username);
+    console.log('User details:', userDetails);
 
-  const prompt = `Give a short and harsh roasting in 100 words for the following GitHub profile: ${username}. Here are the details: "${JSON.stringify(userDetails)}"`;
+    const prompt = `
+Roast this Twitter user based on their profile, assuming they are in "Founder Mode." Be harsh but funny in about 100 words.
 
-  let roast: string = '';
-  try {
+Username: ${username}
+Bio: ${userDetails.description}
+Followers: ${userDetails.public_metrics.followers_count}
+Following: ${userDetails.public_metrics.following_count}
+Tweet count: ${userDetails.public_metrics.tweet_count}
+
+In "Founder Mode," leaders are highly involved, make quick decisions, and prioritize preserving the company's vision and culture. Consider these points:
+
+- Active Involvement: Are they micromanaging their online presence?
+- Fast Decision-Making: Do their stats suggest impulsive behavior?
+- Preserving Vision and Culture: Is their bio aligned with their follower count and tweet frequency?
+- Direct Communication: Does their follower-to-following ratio suggest genuine engagement?
+- Challenging Conventional Wisdom: Are they a trendsetter or just another wannabe influencer?
+
+Use these aspects to create a humorous roast that pokes fun at their 'Founder Mode' style.`;
+
     const completion = await anthropicClient.messages.create({
       model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 2000,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }],
     });
 
-    const contentArray = completion.content as { type: string; text: string }[];
+    const roast = completion.content[0].text;
 
-    roast = contentArray[0].text || 'Could not generate roast.';
-  } catch (error) {
-    console.error('Error generating roast:', error);
-    return NextResponse.json({ error: 'Could not generate roast' }, { status: 500 });
+    const roastData = {
+      username,
+      roast,
+      name: userDetails.name,
+      profile_image_url: userDetails.profile_image_url,
+    };
+
+    // Save to Firebase
+    const roastRef = ref(db, `roasts/${username}`);
+    await set(roastRef, {
+      ...roastData,
+      type: 'twitter',
+      timestamp: Date.now()
+    });
+
+    return NextResponse.json(roastData);
+  } catch (error: any) {
+    console.error('Error in GET function:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  console.log('Generated Roast:', roast);
-
-  const roastRef = ref(db, `roasts/${username}`);
-  const roastSnapshot = await get(roastRef);
-
-  if (roastSnapshot.exists()) {
-    const existingRoast = roastSnapshot.val();
-    return NextResponse.json(existingRoast);
-  }
-
-  await set(roastRef, { username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
-
-  return NextResponse.json({ username, roast, name: userDetails.name, avatar_url: userDetails.avatar_url });
 }

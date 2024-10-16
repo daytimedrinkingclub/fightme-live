@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
 import { FaXTwitter, FaDownload } from 'react-icons/fa6';
 import { useState, useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
 import { toPng } from 'html-to-image';
 
-export default function RoastDisplay({ roastData, enteredUsername }: { 
-  roastData: { roast: string, name: string, avatar_url: string, username: string },
+export default function TwitterRoastDisplay({ roastData, enteredUsername }: {
+  roastData: { roast: string, name: string, profile_image_url: string, username: string },
   enteredUsername: string
 }) {
   const [host, setHost] = useState('');
@@ -16,15 +15,15 @@ export default function RoastDisplay({ roastData, enteredUsername }: {
     setHost(window.location.origin);
   }, []);
 
-  const getShareableLink = () => `${host}/git/${enteredUsername}`;
+  const getShareableLink = () => `${host}/twitter/${enteredUsername}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
-    const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
+    const tweetText = encodeURIComponent(`🔥 I just got roasted on Twitter! Can you handle the heat?
 
 Check out my savage roast at ${shareableLink}
 
-#GitHubRoast #CodeBurn #DevHumor`);
+#TwitterRoast #BurnNotice #SocialMediaHumor`);
     
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };
@@ -41,11 +40,10 @@ Check out my savage roast at ${shareableLink}
         document.body.appendChild(tempContainer);
         
         const clone = contentRef.current.cloneNode(true) as HTMLElement;
-        clone.style.width = '600px'; // Set a fixed width for consistency
+        clone.style.width = '600px';
         clone.style.padding = '20px';
         clone.style.background = '#1F2937';
         
-        // Adjust styles for consistent layout
         const avatarImg = clone.querySelector('img');
         if (avatarImg) {
           avatarImg.style.width = '96px';
@@ -65,7 +63,6 @@ Check out my savage roast at ${shareableLink}
           flexContainer.classList.add('flex-row');
         }
 
-        // Add FightMe.Live logo as SVG with gradient and LIVE badge
         const logoSvg = `
           <svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50">
             <defs>
@@ -95,16 +92,15 @@ Check out my savage roast at ${shareableLink}
         
         const dataUrl = await toPng(clone, {
           cacheBust: true,
-          imagePlaceholder: roastData.avatar_url,
-          width: 600, // Set fixed width
+          imagePlaceholder: roastData.profile_image_url,
+          width: 600,
           height: clone.offsetHeight,
         });
         
-        // Clean up
         document.body.removeChild(tempContainer);
         
         const link = document.createElement('a');
-        link.download = `${enteredUsername}_roast.png`;
+        link.download = `${enteredUsername}_twitter_roast.png`;
         link.href = dataUrl;
         link.click();
       } catch (err) {
@@ -123,7 +119,7 @@ Check out my savage roast at ${shareableLink}
     >
       <div ref={contentRef}>
         <div className="flex flex-col md:flex-row items-center mb-4">
-          <img src={roastData.avatar_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
+          <img src={roastData.profile_image_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
           <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left">{roastData.name}</h2>
         </div>
         <p className="text-gray-300 text-lg italic mb-4">{roastData.roast}</p>
@@ -138,7 +134,7 @@ Check out my savage roast at ${shareableLink}
         </button>
         <motion.button
           onClick={handleDownload}
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg flex items-center"
+          className="bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg flex items-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import { ref, get } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB25zegNBLMFPHVufSqNeaSkoDTK6G_oD0",
@@ -16,3 +17,9 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export { db };
+
+export async function getRoastCount() {
+  const roastsRef = ref(db, 'roasts');
+  const snapshot = await get(roastsRef);
+  return snapshot.size;
+}
