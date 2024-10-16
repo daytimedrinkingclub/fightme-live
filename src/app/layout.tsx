@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {  Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import Link from 'next/link';
 
-const inter = Inter({ subsets: ["latin"] });
+const permanentMarker = Permanent_Marker({ weight: "400", subsets: ["latin"], variable: '--font-permanent-marker' });
 
 export const metadata: Metadata = {
   title: "FightMe - Get Roasted!",
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
-      <body>{children}</body>
+    <html lang="en" className={permanentMarker.variable}>
+      <body className={permanentMarker.className}>{children}</body>
     </html>
   );
 }

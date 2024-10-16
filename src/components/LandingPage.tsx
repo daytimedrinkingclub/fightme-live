@@ -129,37 +129,41 @@ const LandingPage = () => {
         transition={{ duration: 1 }}
         className="container mx-auto px-4 py-8"
       >
-        <header className="flex justify-between items-center mb-12">
-          <motion.div 
-            className="flex items-center space-x-2"
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
-          >
-            <Flame className="w-8 h-8 text-red-500" />
-            <h1 className="text-2xl font-bold">FightMe</h1>
-            <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
-              LIVE
-            </div>
-          </motion.div>
-          <motion.p
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
-            className="text-sm text-gray-400"
-          >
-            Powered by{' '}
-            <a
-              href="https://incubatorop.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-red-500 hover:text-red-400 transition duration-300"
-            >
-              IncubatorOP
-            </a>
-          </motion.p>
-        </header>
+        <header className="flex flex-col sm:flex-row justify-between items-center mb-12">
+  <motion.div
+    initial={{ x: -100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+    className="mb-4 sm:mb-0 flex items-center"
+  >
+    <h1
+      className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500"
+      onClick={triggerEasterEgg}
+    >
+      FightMe
+    </h1>
+    <div className="ml-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
+      <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
+      LIVE
+    </div>
+  </motion.div>
+  <motion.p
+    initial={{ x: 100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ delay: 0.3, type: 'spring', stiffness: 120 }}
+    className="text-sm text-gray-400"
+  >
+    Powered by{' '}
+    <a
+      href="https://incubatorop.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-red-500 hover:text-red-400 transition duration-300"
+    >
+      IncubatorOP
+    </a>
+  </motion.p>
+</header>
 
         <main className="space-y-16">
           <div className="text-center space-y-6">
