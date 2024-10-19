@@ -118,7 +118,7 @@ Check out my savage roast at ${shareableLink}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto"
+      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto relative z-10"
       ref={roastRef}
     >
       <div ref={contentRef}>
