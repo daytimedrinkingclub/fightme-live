@@ -12,6 +12,15 @@ export default function ComparisonDisplay({ comparisonData }: { comparisonData: 
     return "";
   };
 
+  const getScore = (username: string) => {
+    if (username === comparisonData.winner) {
+      return comparisonData.winnerScore;
+    } else if (username === comparisonData.loser) {
+      return comparisonData.loserScore;
+    }
+    return 0;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -37,8 +46,14 @@ export default function ComparisonDisplay({ comparisonData }: { comparisonData: 
             <p className="text-white text-xl font-bold">{user.name}</p>
             <p className="text-gray-300">@{user.username}</p>
             <p className="text-lg mt-2">
-              Score: {user.username === comparisonData.winner ? comparisonData.winnerScore : comparisonData.loserScore}/100
+              Score: {getScore(user.username)}/100
             </p>
+            {user.username === comparisonData.winner && (
+              <p className="text-yellow-400 font-bold mt-2">Winner</p>
+            )}
+            {user.username === comparisonData.loser && (
+              <p className="text-red-600 font-bold mt-2">Loser</p>
+            )}
           </div>
         ))}
       </div>
