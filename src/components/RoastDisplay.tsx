@@ -16,7 +16,7 @@ export default function RoastDisplay({ roastData, enteredUsername }: {
     setHost(window.location.origin);
   }, []);
 
-  const getShareableLink = () => `${host}/git/${enteredUsername}`;
+  const getShareableLink = () => `${host}/github/${enteredUsername}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
