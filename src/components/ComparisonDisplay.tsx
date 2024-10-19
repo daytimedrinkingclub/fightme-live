@@ -30,15 +30,15 @@ export default function ComparisonDisplay({ comparisonData }: { comparisonData: 
     return 0;
   };
 
-  const getShareableLink = () => `${host}`;
+  const getShareableLink = () => `${host}/headtohead/${comparisonData.username1}_vs_${comparisonData.username2}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
     const tweetText = encodeURIComponent(`🔥 Check out this GitHub battle on FightMe.Live!
-
-${shareableLink}
-
-#GitHubBattle #CodeFight #DevShowdown`);
+  
+  ${shareableLink}
+  
+  #GitHubBattle #CodeFight #DevShowdown`);
     
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };

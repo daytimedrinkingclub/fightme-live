@@ -15,15 +15,15 @@ export default function TwitterRoastDisplay({ roastData, enteredUsername }: {
     setHost(window.location.origin);
   }, []);
 
-  const getShareableLink = () => `${host}`;
+  const getShareableLink = () => `${host}/twitter/${enteredUsername}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
-    const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
-
-Check out  ${shareableLink}
-
-#TwitterRoast #BurnNotice #SocialMediaHumor`);
+    const tweetText = encodeURIComponent(`🔥 I just got roasted on Twitter! Can you handle the heat?
+  
+  Check out my savage roast at ${shareableLink}
+  
+  #TwitterRoast #BurnNotice #SocialMediaHumor`);
     
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };

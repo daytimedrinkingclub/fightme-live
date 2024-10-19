@@ -16,13 +16,13 @@ export default function RoastDisplay({ roastData, enteredUsername }: {
     setHost(window.location.origin);
   }, []);
 
-  const getShareableLink = () => `${host}`;
+  const getShareableLink = () => `${host}/git/${enteredUsername}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
     const tweetText = encodeURIComponent(`🔥 I just got roasted on GitHub! Can you handle the heat?
 
-Check out  ${shareableLink}
+Check out my savage roast at ${shareableLink}
 
 #GitHubRoast #CodeBurn #DevHumor`);
     
