@@ -126,7 +126,7 @@ Check out my savage roast at ${shareableLink}
           <img src={roastData.avatar_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
           <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left">{roastData.name}</h2>
         </div>
-        <p className="text-gray-300 text-lg italic mb-4">{roastData.roast}</p>
+        <p className="text-gray-300 text-lg  mb-4 font-ibm-plex-mono">{roastData.roast}</p>
       </div>
       <div className="flex justify-center space-x-4 mt-4">
         <button
