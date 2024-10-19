@@ -120,14 +120,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: `Failed to fetch user details: ${error.message}` }, { status: 404 });
   }
 
-  const prompt = `Compare the following GitHub profiles and declare the winner in a short 100 words and harsh manner:
+  const prompt = `Compare the following GitHub profiles and declare a winner and loser in a short 100 words with a harsh and sarcastic tone:
 
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
 
-Who's the top coder? Be blunt and declare the winner with a harsh reason he sarcastic.`;
+Who's the top coder? Be blunt and declare the winner and loser with harsh reasons. Also, provide a numerical score for each user out of 100.`;
 
   let battleResult: string = '';
+  let winner: string = '';
+  let loser: string = '';
+  let winnerScore: number = 0;
+  let loserScore: number = 0;
+
   try {
     const completion = await anthropicClient.messages.create({
       model: 'claude-3-5-sonnet-20240620',
@@ -141,8 +146,44 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     });
 
     const contentArray = completion.content as { type: string; text: string }[];
+    const fullResponse = contentArray[0].text || 'Could not generate comparison.';
 
-    battleResult = contentArray[0].text || 'Could not generate comparison.';
+    // Parse the AI response to extract winner, loser, and scores
+    const winnerRegex = /Winner.*?: (\w+).*?(\d+)\/100/;
+    const loserRegex = /Loser.*?: (\w+).*?(\d+)\/100/;
+
+    const winnerMatch = fullResponse.match(winnerRegex);
+    const loserMatch = fullResponse.match(loserRegex);
+
+    if (winnerMatch && loserMatch) {
+      winner = winnerMatch[1];
+      winnerScore = parseInt(winnerMatch[2]);
+      loser = loserMatch[1];
+      loserScore = parseInt(loserMatch[2]);
+      battleResult = fullResponse.split('\n').slice(2).join('\n').trim(); // Remove winner/loser lines
+    } else {
+      battleResult = fullResponse;
+      // If regex fails, try to extract information from the battleResult
+      if (battleResult.includes('Winner') && battleResult.includes('Loser')) {
+        const lines = battleResult.split('\n');
+        const winnerLine = lines.find(line => line.startsWith('Winner'));
+        const loserLine = lines.find(line => line.startsWith('Loser'));
+        
+        if (winnerLine) {
+          const winnerParts = winnerLine.split(':')[1].trim().split('-');
+          winner = winnerParts[0].trim();
+          winnerScore = parseInt(winnerParts[1].trim().split('/')[0]);
+        }
+        
+        if (loserLine) {
+          const loserParts = loserLine.split(':')[1].trim().split('-');
+          loser = loserParts[0].trim();
+          loserScore = parseInt(loserParts[1].trim().split('/')[0]);
+        }
+        
+        battleResult = lines.slice(2).join('\n').trim();
+      }
+    }
   } catch (error: any) {
     console.error('Error generating comparison:', error);
     return NextResponse.json({ error: `Failed to generate comparison: ${error.message}` }, { status: 500 });
@@ -158,9 +199,14 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     avatar_url1: userDetails1.avatar_url,
     name2: userDetails2.name,
     avatar_url2: userDetails2.avatar_url,
+    winner,
+    loser,
+    winnerScore,
+    loserScore,
     type: '1v1',
     timestamp: Date.now()
   };
+  console.log('Battle Data:', battleData);
 
   const roastRef = ref(db, `roasts/${username1}_vs_${username2}`);
   await set(roastRef, battleData);
