@@ -30,7 +30,7 @@ export default function ComparisonDisplay({ comparisonData }: { comparisonData: 
     return 0;
   };
 
-  const getShareableLink = () => `${host}/headtohead/${comparisonData.username1}_vs_${comparisonData.username2}`;
+  const getShareableLink = () => `${host}/h2h/${comparisonData.username1}_vs_${comparisonData.username2}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
