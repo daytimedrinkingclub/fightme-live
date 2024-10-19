@@ -14,10 +14,12 @@ export default function HeadToHeadPage() {
 
   useEffect(() => {
     async function fetchComparison() {
+      console.log('Fetching comparison for usernames:', usernames);
       try {
         const response = await fetch(`/api/h2h/${usernames}`);
         if (response.ok) {
           const data = await response.json();
+          console.log('Comparison data received:', data);
           setComparisonData(data);
         } else {
           console.error('Failed to fetch comparison');
@@ -25,14 +27,21 @@ export default function HeadToHeadPage() {
       } catch (error) {
         console.error('Error fetching comparison:', error);
       } finally {
+        console.log('Fetch operation completed');
         setLoading(false);
       }
     }
 
     if (usernames) {
       fetchComparison();
+    } else {
+      console.log('No usernames provided');
     }
   }, [usernames]);
+
+  console.log('Rendering HeadToHeadPage');
+  console.log('Loading state:', loading);
+  console.log('Comparison data:', comparisonData);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden">

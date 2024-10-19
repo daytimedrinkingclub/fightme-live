@@ -7,15 +7,18 @@ export async function GET(
   { params }: { params: { usernames: string } }
 ) {
   const usernames = params.usernames;
+  console.log(`Fetching comparison for usernames: ${usernames}`);
 
   try {
-    const h2hRef = ref(db, `h2h/${usernames}`);
+    const h2hRef = ref(db, `roasts/${usernames}`);
     const snapshot = await get(h2hRef);
 
     if (snapshot.exists()) {
       const comparisonData = snapshot.val();
+      console.log('Comparison data found:', comparisonData);
       return NextResponse.json(comparisonData);
     } else {
+      console.log('Comparison not found');
       return NextResponse.json({ error: 'Comparison not found' }, { status: 404 });
     }
   } catch (error) {

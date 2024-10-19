@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { cn } from "@/lib/utils";
 import Marquee from "../components/ui/marquee";
 import { db } from '../lib/firebase';
 import { ref, query, limitToLast, onValue, orderByChild } from 'firebase/database';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Roast {
   id: string;
@@ -27,16 +28,26 @@ interface Roast {
 }
 
 const ReviewCard = ({ roast }: { roast: Roast }) => {
+  const router = useRouter();
+
   const getProfileUrl = (username: string, type: 'single' | '1v1' | 'twitter') => {
     if (type === 'twitter') {
-      return `https://x.com/${username}`;
+      return `/twitter/${username}`;
+    } else if (type === '1v1') {
+      return `/h2h/${roast.username1}_vs_${roast.username2}`;
     } else {
-      return `https://github.com/${username}`;
+      return `/git/${username}`;
     }
+  };
+
+  const handleClick = () => {
+    const url = getProfileUrl(roast.username || roast.username1!, roast.type);
+    router.push(url);
   };
 
   return (
     <figure
+      onClick={handleClick}
       className={cn(
         "relative w-80 cursor-pointer overflow-hidden rounded-xl p-4 mx-2",
         "bg-gray-800/50 hover:bg-gray-700/50",

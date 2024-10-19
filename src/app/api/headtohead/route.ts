@@ -195,7 +195,7 @@ Winner: [username] (Score: X/100) | Loser: [username] (Score: Y/100)
   };
   console.log('Battle Data:', battleData);
   const comparisonId = `${username1}_vs_${username2}`;
-  const h2hRef = ref(db, `h2h/${comparisonId}`);
+  const h2hRef = ref(db, `roasts/${comparisonId}`);
   await set(h2hRef, battleData);
 
   return NextResponse.json(battleData);
