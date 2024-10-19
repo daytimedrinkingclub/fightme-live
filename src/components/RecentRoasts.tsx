@@ -103,9 +103,6 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
           </blockquote>
         </>
       )}
-      <p className="text-xs text-gray-500 mt-2">
-        {new Date(roast.timestamp).toLocaleString()}
-      </p>
     </figure>
   );
 };
