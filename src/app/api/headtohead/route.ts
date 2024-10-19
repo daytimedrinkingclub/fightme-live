@@ -120,12 +120,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: `Failed to fetch user details: ${error.message}` }, { status: 404 });
   }
 
-  const prompt = `Compare the following GitHub profiles and declare a winner and loser in a short 100 words with a harsh and sarcastic tone:
+  const prompt = `Compare the following GitHub profiles and declare a winner and loser with a harsh and sarcastic tone:
 
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
 
-Who's the top coder? Be blunt and declare the winner and loser with harsh reasons. Also, provide a numerical score for each user out of 100.`;
+Respond in the following format:
+Winner: [username] (Score: X/100) | Loser: [username] (Score: Y/100)
+[Your harsh, sarcastic roast comparing the two users in about 100 words]`;
 
   let battleResult: string = '';
   let winner: string = '';
@@ -149,40 +151,25 @@ Who's the top coder? Be blunt and declare the winner and loser with harsh reason
     const fullResponse = contentArray[0].text || 'Could not generate comparison.';
 
     // Parse the AI response to extract winner, loser, and scores
-    const winnerRegex = /Winner.*?: (\w+).*?(\d+)\/100/;
-    const loserRegex = /Loser.*?: (\w+).*?(\d+)\/100/;
+    const lines = fullResponse.split('\n');
+    const resultLine = lines[0];
+    const resultMatch = resultLine.match(/Winner: (\w+) \(Score: (\d+)\/100\) \| Loser: (\w+) \(Score: (\d+)\/100\)/i);
 
-    const winnerMatch = fullResponse.match(winnerRegex);
-    const loserMatch = fullResponse.match(loserRegex);
+    if (resultMatch) {
+      winner = resultMatch[1];
+      winnerScore = parseInt(resultMatch[2]);
+      loser = resultMatch[3];
+      loserScore = parseInt(resultMatch[4]);
 
-    if (winnerMatch && loserMatch) {
-      winner = winnerMatch[1];
-      winnerScore = parseInt(winnerMatch[2]);
-      loser = loserMatch[1];
-      loserScore = parseInt(loserMatch[2]);
-      battleResult = fullResponse.split('\n').slice(2).join('\n').trim(); // Remove winner/loser lines
+      // Remove the result line from the battle result
+      battleResult = lines.slice(1).join('\n').trim();
     } else {
+      console.error('Failed to parse result line:', resultLine);
       battleResult = fullResponse;
-      // If regex fails, try to extract information from the battleResult
-      if (battleResult.includes('Winner') && battleResult.includes('Loser')) {
-        const lines = battleResult.split('\n');
-        const winnerLine = lines.find(line => line.startsWith('Winner'));
-        const loserLine = lines.find(line => line.startsWith('Loser'));
-        
-        if (winnerLine) {
-          const winnerParts = winnerLine.split(':')[1].trim().split('-');
-          winner = winnerParts[0].trim();
-          winnerScore = parseInt(winnerParts[1].trim().split('/')[0]);
-        }
-        
-        if (loserLine) {
-          const loserParts = loserLine.split(':')[1].trim().split('-');
-          loser = loserParts[0].trim();
-          loserScore = parseInt(loserParts[1].trim().split('/')[0]);
-        }
-        
-        battleResult = lines.slice(2).join('\n').trim();
-      }
+      winner = '';
+      loser = '';
+      winnerScore = 0;
+      loserScore = 0;
     }
   } catch (error: any) {
     console.error('Error generating comparison:', error);
