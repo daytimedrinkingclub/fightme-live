@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import ComparisonDisplay from '@/components/ComparisonDisplay';
 import CustomCursor from '@/components/CustomCursor';
 import FlameAnimation from '@/components/FlameAnimation';
-import BackButton from '@/components/BackButton';
+
 
 export default function HeadToHeadPage() {
   const { usernames } = useParams();
@@ -38,7 +38,7 @@ export default function HeadToHeadPage() {
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
       <CustomCursor />
       <FlameAnimation />
-      <BackButton />
+
       {loading ? (
         <div className="flex justify-center mt-8">
           <div className="loader"></div>

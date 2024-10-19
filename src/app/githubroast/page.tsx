@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import InputForm from '../../components/InputForm';
 import RoastDisplay from '../../components/RoastDisplay';
-import BackButton from '../../components/BackButton';
 import CustomCursor from '../../components/CustomCursor';
 import FlameAnimation from '../../components/FlameAnimation';
 
@@ -17,7 +16,6 @@ export default function GitHubRoast() {
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden flex flex-col items-center justify-center">
       <CustomCursor />
       <FlameAnimation />
-      <BackButton />
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}

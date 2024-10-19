@@ -6,7 +6,6 @@ import { motion, useAnimation } from 'framer-motion';
 import RoastDisplay from '@/components/RoastDisplay';
 import CustomCursor from '@/components/CustomCursor';
 import FlameAnimation from '@/components/FlameAnimation';
-import BackButton from '@/components/BackButton';
 import { RiFireLine } from 'react-icons/ri';
 import { FaXTwitter, FaDownload } from 'react-icons/fa6';
 
@@ -66,7 +65,7 @@ export default function GitRoastPage() {
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
       <CustomCursor />
       <FlameAnimation />
-      <BackButton />
+      
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}

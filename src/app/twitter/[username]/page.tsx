@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import TwitterRoastDisplay from '@/components/TwitterRoastDisplay';
 import CustomCursor from '@/components/CustomCursor';
 import FlameAnimation from '@/components/FlameAnimation';
-import BackButton from '@/components/BackButton';
+
 
 export default function TwitterRoastPage() {
   const { username } = useParams();
@@ -38,7 +38,7 @@ export default function TwitterRoastPage() {
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
       <CustomCursor />
       <FlameAnimation />
-      <BackButton />
+
       {loading ? (
         <div className="flex justify-center mt-8">
           <div className="loader"></div>
