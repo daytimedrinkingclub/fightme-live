@@ -16,7 +16,7 @@ export default function RoastDisplay({ roastData, enteredUsername }: {
     setHost(window.location.origin);
   }, []);
 
-  const getShareableLink = () => `${host}/git/${enteredUsername}`;
+  const getShareableLink = () => `${host}/github/${enteredUsername}`;
 
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
@@ -118,15 +118,31 @@ Check out my savage roast at ${shareableLink}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto"
+      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto relative z-10"
       ref={roastRef}
     >
-      <div ref={contentRef}>
+      <div ref={contentRef} className="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50" className="absolute top-0 right-0">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: '#ef4444', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: '#eab308', stopOpacity: 1 }} />
+            </linearGradient>
+          </defs>
+          <text x="0" y="35" fontFamily="var(--font-permanent-marker)" fontSize="32" fill="url(#logoGradient)">FightMe</text>
+          <g transform="translate(140, 10)">
+            <rect x="0" y="0" width="50" height="24" rx="12" fill="#dc2626" />
+            <circle cx="8" cy="12" r="4" fill="white">
+              <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <text x="16" y="16" fontFamily="var(--font-permanent-marker)" fontSize="12" fill="white">LIVE</text>
+          </g>
+        </svg>
         <div className="flex flex-col md:flex-row items-center mb-4">
           <img src={roastData.avatar_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
-          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left">{roastData.name}</h2>
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left font-ibm-plex-mono">{roastData.name}</h2>
         </div>
-        <p className="text-gray-300 text-lg italic mb-4">{roastData.roast}</p>
+        <p className="text-gray-300 text-lg mb-4 font-ibm-plex-mono">{roastData.roast}</p>
       </div>
       <div className="flex justify-center space-x-4 mt-4">
         <button
@@ -138,7 +154,7 @@ Check out my savage roast at ${shareableLink}
         </button>
         <motion.button
           onClick={handleDownload}
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg flex items-center"
+          className="bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg flex items-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

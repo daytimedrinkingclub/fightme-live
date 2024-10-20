@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { cn } from "@/lib/utils";
 import Marquee from "../components/ui/marquee";
 import { db } from '../lib/firebase';
 import { ref, query, limitToLast, onValue, orderByChild } from 'firebase/database';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Roast {
   id: string;
@@ -21,11 +23,31 @@ interface Roast {
   avatar_url1?: string;
   avatar_url2?: string;
   profile_image_url?: string;
+  winner?: string;
+  loser?: string;
 }
 
 const ReviewCard = ({ roast }: { roast: Roast }) => {
+  const router = useRouter();
+
+  const getProfileUrl = (username: string, type: 'single' | '1v1' | 'twitter') => {
+    if (type === 'twitter') {
+      return `/twitter/${username}`;
+    } else if (type === '1v1') {
+      return `/h2h/${roast.username1}_vs_${roast.username2}`;
+    } else {
+      return `/git/${username}`;
+    }
+  };
+
+  const handleClick = () => {
+    const url = getProfileUrl(roast.username || roast.username1!, roast.type);
+    router.push(url);
+  };
+
   return (
     <figure
+      onClick={handleClick}
       className={cn(
         "relative w-80 cursor-pointer overflow-hidden rounded-xl p-4 mx-2",
         "bg-gray-800/50 hover:bg-gray-700/50",
@@ -40,7 +62,9 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
               <figcaption className="text-sm font-medium text-white">
                 {roast.name}
               </figcaption>
-              <p className="text-xs font-medium text-gray-400">@{roast.username}</p>
+              <Link href={getProfileUrl(roast.username!, roast.type)} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-gray-400 hover:text-gray-200">
+                @{roast.username}
+              </Link>
             </div>
             {roast.type === 'twitter' ? (
               <FaTwitter className="text-blue-400" />
@@ -48,7 +72,7 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
               <FaGithub className="text-white" />
             )}
           </div>
-          <blockquote className="mt-2 text-sm text-gray-300">
+          <blockquote className="mt-2 text-sm text-gray-300 font-ibm-plex-mono">
             {roast.roast ? `${roast.roast.substring(0, 100)}...` : ''}
           </blockquote>
         </>
@@ -57,22 +81,39 @@ const ReviewCard = ({ roast }: { roast: Roast }) => {
           <div className="flex flex-row items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <img className="rounded-full" width="32" height="32" alt="" src={roast.avatar_url1} />
-              <p className="text-xs font-medium text-gray-400">@{roast.username1}</p>
+              <div className="flex flex-col">
+                <Link href={getProfileUrl(roast.username1!, '1v1')} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-gray-400 hover:text-gray-200">
+                  @{roast.username1}
+                </Link>
+                {roast.winner === roast.username1 && (
+                  <span className="text-xs font-bold text-green-500">Winner</span>
+                )}
+                {roast.loser === roast.username1 && (
+                  <span className="text-xs font-bold text-red-500">Loser</span>
+                )}
+              </div>
             </div>
             <span className="text-xs font-bold text-red-500">VS</span>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-medium text-gray-400">@{roast.username2}</p>
+              <div className="flex flex-col items-end">
+                <Link href={getProfileUrl(roast.username2!, '1v1')} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-gray-400 hover:text-gray-200">
+                  @{roast.username2}
+                </Link>
+                {roast.winner === roast.username2 && (
+                  <span className="text-xs font-bold text-green-500">Winner</span>
+                )}
+                {roast.loser === roast.username2 && (
+                  <span className="text-xs font-bold text-red-500">Loser</span>
+                )}
+              </div>
               <img className="rounded-full" width="32" height="32" alt="" src={roast.avatar_url2} />
             </div>
           </div>
-          <blockquote className="mt-2 text-sm text-gray-300">
+          <blockquote className="mt-2 text-sm text-gray-300 font-ibm-plex-mono">
             {roast.battleResult ? `${roast.battleResult.substring(0, 100)}...` : ''}
           </blockquote>
         </>
       )}
-      <p className="text-xs text-gray-500 mt-2">
-        {new Date(roast.timestamp).toLocaleString()}
-      </p>
     </figure>
   );
 };
@@ -109,6 +150,8 @@ export function RecentRoasts() {
             battleResult: roast.battleResult,
             avatar_url1: roast.avatar_url1,
             avatar_url2: roast.avatar_url2,
+            winner: roast.winner,
+            loser: roast.loser,
           });
         }
       });

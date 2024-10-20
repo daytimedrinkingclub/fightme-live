@@ -81,7 +81,10 @@ const config: Config = {
   		animation: {
   			marquee: 'marquee var(--duration) infinite linear',
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite'
-  		}
+  		},
+  		fontFamily: {
+  			'ibm-plex-mono': ['var(--font-ibm-plex-mono)', 'monospace'],
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

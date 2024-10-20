@@ -120,14 +120,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: `Failed to fetch user details: ${error.message}` }, { status: 404 });
   }
 
-  const prompt = `Compare the following GitHub profiles and declare the winner in a short 100 words and harsh manner:
+  const prompt = `Compare the following GitHub profiles and declare a winner and loser with a harsh and sarcastic tone:
 
 **${username1}**: ${JSON.stringify(userDetails1)}
 **${username2}**: ${JSON.stringify(userDetails2)}
 
-Who's the top coder? Be blunt and declare the winner with a harsh reason he sarcastic.`;
+Respond in the following format:
+Winner: [username] (Score: X/100) | Loser: [username] (Score: Y/100)
+[Your harsh, sarcastic roast comparing the two users in about 100 words]`;
 
   let battleResult: string = '';
+  let winner: string = '';
+  let loser: string = '';
+  let winnerScore: number = 0;
+  let loserScore: number = 0;
+
   try {
     const completion = await anthropicClient.messages.create({
       model: 'claude-3-5-sonnet-20240620',
@@ -141,8 +148,29 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     });
 
     const contentArray = completion.content as { type: string; text: string }[];
+    const fullResponse = contentArray[0].text || 'Could not generate comparison.';
 
-    battleResult = contentArray[0].text || 'Could not generate comparison.';
+    // Parse the AI response to extract winner, loser, and scores
+    const lines = fullResponse.split('\n');
+    const resultLine = lines[0];
+    const resultMatch = resultLine.match(/Winner: (\w+) \(Score: (\d+)\/100\) \| Loser: (\w+) \(Score: (\d+)\/100\)/i);
+
+    if (resultMatch) {
+      winner = resultMatch[1];
+      winnerScore = parseInt(resultMatch[2]);
+      loser = resultMatch[3];
+      loserScore = parseInt(resultMatch[4]);
+
+      // Remove the result line from the battle result
+      battleResult = lines.slice(1).join('\n').trim();
+    } else {
+      console.error('Failed to parse result line:', resultLine);
+      battleResult = fullResponse;
+      winner = '';
+      loser = '';
+      winnerScore = 0;
+      loserScore = 0;
+    }
   } catch (error: any) {
     console.error('Error generating comparison:', error);
     return NextResponse.json({ error: `Failed to generate comparison: ${error.message}` }, { status: 500 });
@@ -158,12 +186,17 @@ Who's the top coder? Be blunt and declare the winner with a harsh reason he sarc
     avatar_url1: userDetails1.avatar_url,
     name2: userDetails2.name,
     avatar_url2: userDetails2.avatar_url,
+    winner,
+    loser,
+    winnerScore,
+    loserScore,
     type: '1v1',
     timestamp: Date.now()
   };
-
-  const roastRef = ref(db, `roasts/${username1}_vs_${username2}`);
-  await set(roastRef, battleData);
+  console.log('Battle Data:', battleData);
+  const comparisonId = `${username1}_vs_${username2}`;
+  const h2hRef = ref(db, `roasts/${comparisonId}`);
+  await set(h2hRef, battleData);
 
   return NextResponse.json(battleData);
 }

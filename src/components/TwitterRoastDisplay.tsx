@@ -20,10 +20,10 @@ export default function TwitterRoastDisplay({ roastData, enteredUsername }: {
   const shareOnTwitter = () => {
     const shareableLink = getShareableLink();
     const tweetText = encodeURIComponent(`🔥 I just got roasted on Twitter! Can you handle the heat?
-
-Check out my savage roast at ${shareableLink}
-
-#TwitterRoast #BurnNotice #SocialMediaHumor`);
+  
+  Check out my savage roast at ${shareableLink}
+  
+  #TwitterRoast #BurnNotice #SocialMediaHumor`);
     
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };
@@ -114,15 +114,15 @@ Check out my savage roast at ${shareableLink}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto"
+      className="mt-8 p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-2xl mx-auto relative z-10"
       ref={roastRef}
     >
       <div ref={contentRef}>
-        <div className="flex flex-col md:flex-row items-center mb-4">
+      <div className="flex flex-col md:flex-row items-center mb-4">
           <img src={roastData.profile_image_url} alt={`${roastData.name}'s avatar`} className="w-24 h-24 rounded-full mb-4 md:mb-0 md:mr-4" />
           <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500 text-center md:text-left">{roastData.name}</h2>
         </div>
-        <p className="text-gray-300 text-lg italic mb-4">{roastData.roast}</p>
+        <p className="text-gray-300 text-lg mb-4 font-ibm-plex-mono">{roastData.roast}</p>
       </div>
       <div className="flex justify-center space-x-4 mt-4">
         <button

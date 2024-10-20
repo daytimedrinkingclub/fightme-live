@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import TwitterRoastForm from '../../components/TwitterRoastForm';
 import TwitterRoastDisplay from '../../components/TwitterRoastDisplay';
-import BackButton from '../../components/BackButton';
+
 import CustomCursor from '../../components/CustomCursor';
 import FlameAnimation from '../../components/FlameAnimation';
 import { db } from '../../lib/firebase';
@@ -31,7 +31,7 @@ export default function TwitterRoast() {
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden flex flex-col items-center justify-center">
       <CustomCursor />
       <FlameAnimation />
-      <BackButton />
+
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
